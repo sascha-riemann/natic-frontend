@@ -1,0 +1,18 @@
+<div class="flex flex-column align-items-center pt-3">
+  <div class="flex flex-column w-full max-w-30rem" *appLet="options$ | async as options">
+    <p-listbox [options]="options" (onClick)="selectProject($event)">
+      <ng-template pTemplate="header">
+        <span style="font-size: 1.5rem; padding: 0.5rem 0">Projekte</span>
+      </ng-template>
+      <ng-template let-project pTemplate="item">
+        <div class="flex flex-column">
+          <span>{{ project?.name }}</span>
+          <small>{{ project?.description }}</small>
+          <small class="mt-2">{{ project?.address }}</small>
+        </div>
+      </ng-template>
+    </p-listbox>
+
+    <p-button routerLink="../create" class="ml-auto mt-2">Projekt erstellen</p-button>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="flex justify-content-center align-items-center h-full">
+  <div class="w-full flex flex-column gap-2 w-30rem" [formGroup]="formGroup">
+    <h2>Betrieb erstellen</h2>
+
+    <label>Name</label>
+    <input pInputText formControlName="name" />
+
+    <label>Beschreibung</label>
+    <input pInputText formControlName="description" />
+
+    <label>Addresse</label>
+    <input pInputText formControlName="address" />
+
+    <div class="flex flex-row gap-3 mt-5 align-self-end">
+      <button pButton class="p-button-link" routerLink="../">Abbrechen</button>
+      <button pButton (click)="submit()" type="submit">Betrieb erstellen</button>
+    </div>
+  </div>
+</div>

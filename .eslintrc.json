@@ -1,0 +1,398 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "plugins": [
+        "@angular-eslint",
+        "@typescript-eslint",
+        "import",
+        "unused-imports",
+        "simple-import-sort",
+        "rxjs",
+        "rxjs-angular",
+        "cypress",
+        "jsdoc",
+        "prettier"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "eslint:recommended",
+        "plugin:cypress/recommended",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
+
+        // Error if Requires return statements to either always or never specify values
+        "consistent-return": [
+          "error",
+          {
+            "treatUndefinedAsUnspecified": false
+          }
+        ],
+
+        "jsdoc/check-alignment": "error",
+        "jsdoc/check-param-names": "error",
+        "jsdoc/check-property-names": "error",
+        "jsdoc/check-tag-names": "error",
+        "jsdoc/empty-tags": "error",
+        "jsdoc/implements-on-classes": "error",
+        "jsdoc/multiline-blocks": "error",
+        "jsdoc/no-bad-blocks": "error",
+        "jsdoc/require-jsdoc": "error",
+        "jsdoc/require-param": "error",
+        "jsdoc/require-param-description": "error",
+        "jsdoc/require-param-name": "error",
+        "jsdoc/require-property": "error",
+        "jsdoc/require-property-description": "error",
+        "jsdoc/require-property-name": "error",
+        "jsdoc/require-returns": "error",
+        "jsdoc/require-returns-description": "error",
+        "jsdoc/require-returns-check": "error",
+        "jsdoc/tag-lines": "error",
+        "jsdoc/require-throws": "error",
+
+        // Error if function is empty
+        "@typescript-eslint/no-empty-function": "error",
+
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-namespace": "off",
+
+        // Error if lifecycle is empty
+        "@angular-eslint/no-empty-lifecycle-method": "error",
+
+        // Naming conventions
+        "@typescript-eslint/naming-convention": [
+          "warn",
+          {
+            "selector": "variableLike",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "property",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "method",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "property",
+            "modifiers": ["private"],
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "method",
+            "modifiers": ["private"],
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "variable",
+            "modifiers": ["const", "global"],
+            "format": ["UPPER_CASE", "camelCase", "PascalCase"]
+          },
+          {
+            "selector": "enumMember",
+            "format": ["UPPER_CASE"]
+          },
+          {
+            "selector": "classProperty",
+            "modifiers": ["private"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow"
+          },
+          {
+            "selector": "classProperty",
+            "modifiers": ["static", "readonly"],
+            "format": ["UPPER_CASE"]
+          },
+          {
+            "selector": "classProperty",
+            "modifiers": ["static"],
+            // TODO: Upper case entfernen
+            "format": ["UPPER_CASE", "camelCase"]
+          },
+          {
+            "selector": "classProperty",
+            "modifiers": ["readonly"],
+            // TODO: Nur camel case?
+            "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+          },
+          {
+            "selector": "function",
+            "modifiers": ["global", "exported"],
+            "format": ["camelCase", "PascalCase"]
+          },
+          {
+            "selector": "objectLiteralProperty",
+            "format": ["camelCase", "UPPER_CASE"]
+          }
+        ],
+
+        // Enforces directive selectors to be camelCase
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": ".*",
+            "style": "camelCase"
+          }
+        ],
+
+        // Enforces component selectors to be kebabCase
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": ".*",
+            "style": "kebab-case"
+          }
+        ],
+
+        // Enforces lines of code to have a maximum length. Except imports
+        "max-len": [
+          "error",
+          {
+            "code": 140,
+            "ignorePattern": "^import .*",
+            "ignoreComments": true,
+            "ignoreUrls": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true,
+            "ignoreRegExpLiterals": true
+          }
+        ],
+
+        // Requires explicit accessibility modifiers on class properties and methods
+        "@typescript-eslint/explicit-member-accessibility": [
+          "off",
+          {
+            "accessibility": "explicit"
+          }
+        ],
+
+        // Enforces to use a for loop with of operator instead of accessing the iteration via the index
+        // Right -> for (x of objects) console.log(x)
+        // Wrong -> for (let i = 0; i <= objects.length; i++) console.log(objects[x])
+        // TODO: Wenn usage sollte kein Error sein
+        "@typescript-eslint/prefer-for-of": "error",
+
+        // Requires or disallows method and property shorthand syntax for object literals
+        "object-shorthand": ["error", "always"],
+
+        // Enforces the user to place the braces in the same line as the block
+        "brace-style": "off",
+
+        // Disabled, prettier takes care
+
+        // https://eslint.org/docs/2.0.0/rules/id-blacklist
+        "id-blacklist": "off",
+
+        "id-match": "off",
+
+        // Unix (\n) or windows (\r\n)
+        "linebreak-style": "off",
+
+        // right -> new Person() | wrong -> new Person
+        "new-parens": "off",
+
+        // Enforces new line after every method call
+        "newline-per-chained-call": "off",
+
+        "no-irregular-whitespace": "off",
+        "no-extra-semi": "off",
+
+        // No underscore leading or following
+        "no-underscore-dangle": "off",
+
+        // Enforces to use properties without double quotes when assigning value to it
+        // e.g: car.brand instead of car["brand"]
+        "quote-props": "off",
+
+        // Requires a space before function parenthesis
+        "space-before-function-paren": "off",
+
+        // Enforce spaces inside of parentheses
+        "space-in-parens": ["off", "never"],
+
+        // Error if the sorting of the import statement is not right
+        "simple-import-sort/imports": "error",
+
+        // Minimum 1 line space between imports block and the following code
+        "import/newline-after-import": "error",
+
+        // Error if there is a duplicate in the imports
+        "import/no-duplicates": "error",
+        "import/no-absolute-path": "error",
+        "import/no-useless-path-segments": "error",
+        "unused-imports/no-unused-imports": "error",
+        // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-unassigned-import.md#:~:text=import%2Fno%2Dunassigned%2Dimport%3A%20Forbid%20unassigned%20imports,-With%20both%20CommonJS&text=Doing%20so%20can%20mean%20either,used%20or%20can%20be%20removed.
+        "import/no-unassigned-import": "error",
+
+        // This rule effects failures if async functions are passed to subscribe
+        // e.g: of(42).subscribe(async () => console.log(value));
+        "rxjs/no-async-subscribe": "error",
+
+        // Prevents creating of observable with static create function from Observable class
+        // Use new Observable() instead
+        "rxjs/no-create": "error",
+
+        // TODO: Rule verstehen
+        // https://github.com/cartant/eslint-plugin-rxjs/blob/main/docs/rules/no-ignored-notifier.md
+        "rxjs/no-ignored-notifier": "error",
+
+        // This rule effects failures if the buffer size of a replay buffer is not explicitly specified
+        "rxjs/no-ignored-replay-buffer": "error",
+
+        "rxjs/no-ignored-takewhile-value": "error",
+
+        // e.g (error: any) => console.log(error);
+        "rxjs/no-implicit-any-catch": "off",
+
+        // Enforces to import not from rxjs/index
+        "rxjs/no-index": "error",
+
+        // Enforces to import not from rxjs/internal
+        "rxjs/no-internal": "error",
+
+        "rxjs/no-nested-subscribe": "error",
+
+        // https://github.com/cartant/eslint-plugin-rxjs/blob/main/docs/rules/no-redundant-notify.md
+        "rxjs/no-redundant-notify": "error",
+
+        // Error if share reqplay without config is used in pipe
+        // TODO: Ist diese redundant
+        "rxjs/no-sharereplay": [
+          "error",
+          {
+            "allowConfig": true
+          }
+        ],
+
+        // Prevents from calling unsubscribe on subject
+        "rxjs/no-subject-unsubscribe": "error",
+
+        // https://github.com/cartant/eslint-plugin-rxjs/blob/main/docs/rules/no-unbound-methods.md
+        "rxjs/no-unbound-methods": "error",
+
+        // Allows only the type in next() which is defined in subject creation
+        // e.g BehaviourSubject<number>() -> subject.next(onlyNumberValue);
+        // e.g BehaviourSubject<void>() -> subject.next();
+        "rxjs/no-unsafe-subject-next": "error",
+
+        // TODO: Brauchen wir diese Regel wirklich?
+        "rxjs/no-unsafe-takeuntil": [
+          "error",
+          {
+            "alias": ["untilDestroyed"]
+          }
+        ],
+        // Error if observable is subscribed without closing it after a specific condition (e.g. view destroyed)
+        "rxjs-angular/prefer-takeuntil": [
+          "error",
+          {
+            "alias": ["untilDestroyed", "first", "last", "take", "takeLast"],
+            "checkComplete": true,
+            "checkDecorators": ["Component", "Pipe"],
+            "checkDestroy": false
+          }
+        ],
+
+        // Error if property of object is accessed with brackets notation
+        // Enforces obj.a instead of obj['a']
+        "@typescript-eslint/dot-notation": "error",
+
+        "@typescript-eslint/no-unsafe-member-access": "error",
+
+        // Error if parameter or return type is any
+        "@typescript-eslint/no-explicit-any": "error",
+
+        // Disallows assigning a variable that is typed as any
+        "@typescript-eslint/no-unsafe-assignment": "error",
+
+        // Disallows calling variable that is typed as any
+        "@typescript-eslint/no-unsafe-call": "error",
+
+        // Warns about using data in strings that was not passed via a template literal
+        "@typescript-eslint/restrict-template-expressions": "error",
+
+        // Warning if variables of different types are in addition (e.g '5' + 5)
+        "@typescript-eslint/restrict-plus-operands": "error",
+
+        // https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/no-floating-promises.md
+        "@typescript-eslint/no-floating-promises": "error",
+
+        // TODO: Welche Reihenfolge?
+        "@typescript-eslint/member-ordering": "error",
+
+        // Warning if function is not providing a return type
+        "@typescript-eslint/no-unsafe-return": "error",
+
+        // Error if variable is never reassigned and not declared as readonly. Helpful in constructors
+        "@typescript-eslint/prefer-readonly": [
+          "error",
+          {
+            "onlyInlineLambdas": true
+          }
+        ],
+
+        "eqeqeq": ["error", "smart"],
+
+        // https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/unbound-method.md
+        "@typescript-eslint/unbound-method": [
+          "error",
+          {
+            "ignoreStatic": true
+          }
+        ],
+
+        // Disallows Promises in places not designed to handle them
+        "@typescript-eslint/no-misused-promises": "error",
+
+        // Error if the formatting is not as it is specified in prettier config
+        "prettier/prettier": "error"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "plugins": ["@angular-eslint", "prettier"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "plugin:prettier/recommended"],
+      "rules": {
+        "@angular-eslint/template/no-negated-async": "error"
+      }
+    },
+    {
+      "files": ["**/test-setup.ts", "**/index.ts", "**/main.ts", "**/polyfills.ts", "**/test.ts"],
+      "rules": {
+        "import/no-unassigned-import": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.spec.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/unbound-method": "off"
+      },
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}

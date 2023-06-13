@@ -1,0 +1,78 @@
+<div class="flex flex-row gap-2 w-full">
+  <div class="flex flex-column gap-2">
+    <h1>Bauzeitenplan</h1>
+    <p-treeTable *ngIf="schedules$ | async as schedules" [value]="schedules" [scrollable]="true" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Bauphase</th>
+          <th>Start</th>
+          <th>Ende</th>
+          <th>Dauer</th>
+          <th>Aufgaben</th>
+          <th>Aktionen</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+        <tr [ttRow]="rowNode">
+          <td>
+            <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+            {{ rowData.name }}
+          </td>
+          <td>{{ rowData.start | date }}</td>
+          <td>{{ rowData.end | date }}</td>
+          <td>{{ format(rowData.start, rowData.end) }}</td>
+          <td>{{ 2 }}</td>
+          <td>
+            <div class="flex flex-row gap-1">
+              <p-button
+                icon="pi pi-plus"
+                [pTooltip]="'Bauphase zu ' + rowData.name + ' hinzufügen'"
+                (onClick)="openScheduleDialog(rowData)"></p-button>
+              <p-button icon="pi pi-pencil" styleClass="p-button-secondary"></p-button>
+              <p-button icon="pi pi-trash" styleClass="p-button-danger"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="5"></td>
+          <td colspan="1">
+            <div class="flex flex-row gap-1">
+              <p-button icon="pi pi-plus" [pTooltip]="'Bauphase hinzufügen'" (onClick)="openScheduleDialog()"></p-button>
+              <p-button icon="pi pi-save"></p-button>
+              <p-button icon="pi pi-times" styleClass="p-button-danger"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+  </div>
+</div>
+
+<p-dialog header="Bauphase hinzufügen" [(visible)]="showDialog" [style]="{ width: '100%', maxWidth: '50rem' }">
+  <div class="flex flex-column gap-2" [formGroup]="scheduleFormGroup">
+    <div class="flex flex-column gap-1">
+      <label>Name</label>
+      <input pInputText formControlName="name" />
+    </div>
+    <div class="flex flex-column gap-1">
+      <label>Beschreibung</label>
+      <textarea pInputTextarea formControlName="description"></textarea>
+    </div>
+    <div class="flex flex-row gap-2">
+      <div class="flex flex-column w-full">
+        <label>Start</label>
+        <p-calendar [style]="{ width: '100%' }" placeholder="Start" [showTime]="true" formControlName="start"></p-calendar>
+      </div>
+      <div class="flex flex-column w-full">
+        <label>Ende</label>
+        <p-calendar [style]="{ width: '100%' }" placeholder="Ende" [showTime]="true" formControlName="end"></p-calendar>
+      </div>
+    </div>
+    <div class="flex flex-row gap-2 mt-4 align-self-end">
+      <p-button styleClass="p-button-text" routerLink="../">Abbrechen</p-button>
+      <p-button (onClick)="addSchedule()">Erstellen</p-button>
+    </div>
+  </div>
+</p-dialog>

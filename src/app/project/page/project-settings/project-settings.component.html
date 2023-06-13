@@ -1,0 +1,19 @@
+<div class="flex flex-column w-full max-w-30rem gap-2" [formGroup]="formGroup">
+  <h2>Einstellungen</h2>
+  <div class="flex flex-column gap-1">
+    <label>Name</label>
+    <input pInputText formControlName="name" />
+  </div>
+  <div class="flex flex-column gap-1">
+    <label>Beschreibung</label>
+    <textarea pInputTextarea [autoResize]="true" formControlName="description"></textarea>
+  </div>
+  <div class="flex flex-column gap-1">
+    <label>Adresse</label>
+    <input pInputText formControlName="address" />
+  </div>
+  <div class="flex flex-row gap-2 mt-4 align-self-end">
+    <p-button styleClass="p-button-text" routerLink="../">Abbrechen</p-button>
+    <p-button (onClick)="save()">Speichern</p-button>
+  </div>
+</div>

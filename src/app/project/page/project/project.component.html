@@ -1,0 +1,19 @@
+<div class="flex flex-row gap-5" *ngIf="projectOverview$ | async as projectOverview">
+  <p-card [header]="projectOverview.name" [subheader]="projectOverview.address" [style]="{ width: '360px' }">
+    <ng-template pTemplate="header">
+      <google-map width="100%" height="250px" [options]="mapOptions"></google-map>
+    </ng-template>
+    <span>
+      {{ projectOverview.description }}
+    </span>
+    <ng-template pTemplate="footer">
+      <div class="flex flex-column gap-2">
+        <p-menu [style]="{ width: '100%' }" [model]="items"></p-menu>
+        <p-button label="Teilen" class="align-self-end"></p-button>
+      </div>
+    </ng-template>
+  </p-card>
+  <div class="w-full">
+    <router-outlet></router-outlet>
+  </div>
+</div>
