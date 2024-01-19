@@ -1,0 +1,7 @@
+<app-page title="Einstellungen" size="small">
+  <app-user-form [changeOwn]="true" [formControl]="user"></app-user-form>
+  <div class="flex flex-row gap-3 mt-5 align-self-end">
+    <button pButton class="p-button-link" routerLink="/">Abbrechen</button>
+    <button pButton (click)="save()" type="submit">Speichern</button>
+  </div>
+</app-page>

@@ -339,7 +339,7 @@
         "@typescript-eslint/no-floating-promises": "error",
 
         // TODO: Welche Reihenfolge?
-        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/member-ordering": "off",
 
         // Warning if function is not providing a return type
         "@typescript-eslint/no-unsafe-return": "error",

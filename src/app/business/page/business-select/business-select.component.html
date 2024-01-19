@@ -1,17 +1,11 @@
-<div class="flex flex-column align-items-center pt-8">
-  <div class="flex flex-column w-full max-w-30rem" *appLet="options$ | async as options">
-    <h2>Betrieb auswählen</h2>
-
-    <p-listbox [options]="options" (onClick)="selectOrganisation($event)">
-      <ng-template let-business pTemplate="item">
-        <div class="flex flex-column">
-          <span>{{ business?.name }}</span>
-          <small>{{ business?.description }}</small>
-          <small class="mt-2">{{ business?.address }}</small>
-        </div>
-      </ng-template>
-    </p-listbox>
-
-    <button pButton routerLink="../create" class="mt-3 align-self-end"> Betrieb erstellen </button>
-  </div>
-</div>
+<app-page *appLet="options$ | async as options" title="Betrieb auswählen" [showCreateButton]="true" createRouterLink="../create" size="small">
+  <p-listbox [options]="options" (onClick)="selectOrganisation($event)" emptyMessage="Es konnten keine Betriebe gefunden werden">
+    <ng-template let-business pTemplate="item">
+      <div class="flex flex-column">
+        <span>{{ business?.name }}</span>
+        <small>{{ business?.description }}</small>
+        <small class="mt-2">{{ business?.address }}</small>
+      </div>
+    </ng-template>
+  </p-listbox>
+</app-page>

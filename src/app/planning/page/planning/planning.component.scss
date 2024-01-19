@@ -1,0 +1,21 @@
+.project {
+  padding: 1rem;
+  border: 1px solid lightgray;
+}
+
+.selected {
+  background-color: #639eea;
+}
+
+.availableRessource ::ng-deep {
+
+  .p-listbox-header {
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .p-listbox {
+    border: none;
+  }
+
+}

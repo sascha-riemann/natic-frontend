@@ -24,7 +24,7 @@ export class BusinessCreateComponent {
 
   submit(): void {
     this.http
-      .post<number>(BusinessEndpoints.CREATE, {
+      .post<number>(BusinessEndpoints.create, {
         name: this.formGroup.get('name')!.value!,
         description: this.formGroup.get('description')!.value!,
         address: this.formGroup.get('address')!.value!,

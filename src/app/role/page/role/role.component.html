@@ -1,0 +1,43 @@
+<app-page [formGroup]="formGroup" *appLet="role$ | async as role" title="Rolle {{ role ? 'bearbeiten' : 'erstellen' }}" size="normal">
+  <label>Name</label>
+  <input pInputText formControlName="name" />
+
+  <h3>Benutzer mit dieser Rolle dürfen</h3>
+
+  <span>im Betrieb</span>
+  <p-selectButton
+    [options]="businessPermissions"
+    [multiple]="true"
+    optionLabel="label"
+    optionValue="value"
+    formControlName="businessPermissions"></p-selectButton>
+
+  <span class="mt-3">in allen Projekten</span>
+  <p-selectButton
+    [multiple]="true"
+    formControlName="projectPermissions"
+    optionLabel="label"
+    optionValue="value"
+    [options]="projectPermissions"></p-selectButton>
+
+  <h2 class="mt-7">Benutzer zuweisen</h2>
+
+  <p-pickList
+    [sourceStyle]="{ height: '20rem' }"
+    [targetStyle]="{ height: '20rem' }"
+    filterBy="username,firstName,lastName"
+    [source]="availableUsers"
+    [target]="selectedUsers"
+    sourceHeader="Verfügbar"
+    targetHeader="Zugewiesen"
+    [dragdrop]="true"
+    [showTargetControls]="false"
+    [showSourceControls]="false">
+    <ng-template let-user pTemplate="item"> {{ user.firstName }} {{ user.lastName }} | {{ user.username }}</ng-template>
+  </p-pickList>
+
+  <div class="flex flex-row gap-3 mt-5 align-self-end">
+    <button pButton class="p-button-link" routerLink="../">Abbrechen</button>
+    <button pButton type="submit" (click)="save()">Speichern</button>
+  </div>
+</app-page>

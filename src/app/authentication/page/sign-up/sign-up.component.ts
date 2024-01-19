@@ -1,11 +1,14 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { take } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 
+import { UserForm, UserFormError } from '../../../reusable/component/user-form/user-form.component';
 import { HttpErrorStatusHelper, NaticHttpErrorResponse } from '../../../reusable/utils/http-error-status-helper';
-import { AuthenticationEndpoints } from '../../authentication.module';
+import { CreateUser } from '../../../user/dto/user';
+import { UserService } from '../../../user/service/user.service';
+import { SignIn } from '../../dto/sign-in';
 import { AuthenticationService } from '../../service/authentication.service';
 
 @Component({
@@ -14,60 +17,57 @@ import { AuthenticationService } from '../../service/authentication.service';
   styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent {
-  formGroup = new FormGroup(
-    {
-      firstName: new FormControl(undefined, Validators.required),
-      lastName: new FormControl(undefined, Validators.required),
-      username: new FormControl(undefined, Validators.required),
-      email: new FormControl(undefined, Validators.required),
-      phone: new FormControl(undefined, Validators.required),
-      password: new FormControl(undefined, Validators.required),
-      passwordRepeat: new FormControl(undefined, Validators.required),
-    },
-    () => {
-      return (formGroup: FormGroup) => {
-        const password = formGroup.get('password');
-        const passwordRepeat = formGroup.get('passwordRepeat');
+  user = new FormControl<UserForm | undefined>(undefined, Validators.required);
 
-        if (password?.value !== passwordRepeat?.value) {
-          password?.setErrors({ required: true });
-          passwordRepeat?.setErrors({ required: true });
-        } else {
-          password?.setErrors(null);
-          passwordRepeat?.setErrors(null);
-        }
-        return;
-      };
-    },
-  );
+  error?: UserFormError;
 
-  constructor(private readonly http: HttpClient, private readonly authService: AuthenticationService, private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly userService: UserService,
+    private readonly authenticationService: AuthenticationService,
+  ) {}
 
-  signUp(): void {
-    if (this.formGroup.valid) {
-      this.http
-        .post<{ token: string }>(AuthenticationEndpoints.SIGN_UP, this.formGroup.value)
-        .pipe(take(1))
-        .subscribe(
-          jwt => {
-            this.formGroup.setErrors(null);
-            this.authService.storeJWT(jwt.token);
-            void this.router.navigateByUrl('/');
-          },
-          (error: HttpErrorResponse) => {
-            this.formGroup.setErrors(null);
-            const conflict = HttpErrorStatusHelper.CONFLICT(error);
-            if (conflict) {
-              const errorMessage = (error as NaticHttpErrorResponse).error.message;
+  onCancel(): void {
+    void this.router.navigate(['../sign-in']);
+  }
 
-              if (errorMessage === 'email') {
-                this.formGroup.setErrors({ emailInUse: true });
-              } else if (errorMessage === 'username') {
-                this.formGroup.setErrors({ usernameInUse: true });
+  save(): void {
+    if (this.user.valid) {
+      const userFormValue = this.user.value;
+      if (userFormValue) {
+        this.userService
+          .create({
+            password: userFormValue.password,
+            firstName: userFormValue.firstName,
+            lastName: userFormValue.lastName,
+            username: userFormValue.username,
+            email: userFormValue.email,
+          } as CreateUser)
+          .pipe(
+            switchMap(() =>
+              this.authenticationService.signIn({
+                username: userFormValue.username,
+                password: userFormValue.password,
+              } as SignIn),
+            ),
+            take(1),
+          )
+          .subscribe(
+            () => void this.router.navigateByUrl('/'),
+            (error: HttpErrorResponse) => {
+              const conflict = HttpErrorStatusHelper.CONFLICT(error);
+              if (conflict) {
+                const errorMessage = (error as NaticHttpErrorResponse).error.message;
+
+                if (errorMessage === 'email') {
+                  this.error = 'emailExist';
+                } else if (errorMessage === 'username') {
+                  this.error = 'usernameExist';
+                }
               }
-            }
-          },
-        );
+            },
+          );
+      }
     }
   }
 }

@@ -1,0 +1,15 @@
+<div class="flex flex-column ml-auto mr-auto gap-2" [ngClass]="size">
+  <div class="flex flex-row align-items-center">
+    <h1 *ngIf="title" class="page-title">{{ title }}</h1>
+    <p-button
+      *ngIf="showCreateButton"
+      icon="pi pi-plus"
+      class="ml-auto"
+      styleClass="p-button-rounded"
+      [routerLink]="createRouterLink"
+      (onClick)="createClick.emit()"></p-button>
+  </div>
+  <div class="flex flex-column gap-2">
+    <ng-content></ng-content>
+  </div>
+</div>

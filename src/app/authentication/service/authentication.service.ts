@@ -1,35 +1,42 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { addYears } from 'date-fns';
-import { BehaviorSubject } from 'rxjs';
+import { catchError, map, Observable, of, Subject, tap } from 'rxjs';
+
+import { AuthenticationEndpoints } from '../authentication.module';
+import { SignIn } from '../dto/sign-in';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  authenticated$ = new BehaviorSubject(this.getJWT() !== null);
+  private readonly authenticated$ = new Subject<boolean>();
 
-  storeJWT(jwt: string): void {
-    const expires = addYears(new Date(), 1);
-    document.cookie = `JWT=${escape(jwt)}; expires=${expires.toUTCString()}`;
-    this.authenticated$.next(true);
+  constructor(private readonly http: HttpClient) {}
+
+  isAuthenticated$(): Observable<boolean> {
+    return this.authenticated$;
   }
 
-  getJWT(): string | undefined {
-    return this.getCookie('JWT');
+  requestAuthenticationStatus$(): Observable<boolean> {
+    return this.http.get<void>(AuthenticationEndpoints.CHECK).pipe(
+      map(() => true),
+      catchError(() => of(false)),
+      tap(authenticated => this.authenticated$.next(authenticated)),
+    );
   }
 
-  getCookie(name: string) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      return parts!.pop()!.split(';').shift();
-    } else {
-      return undefined;
-    }
+  checkRolePermission(): Observable<boolean> {
+    return this.http.get<boolean>(AuthenticationEndpoints.CHECK_PERMISSION);
   }
 
-  deleteJWT(): void {
-    localStorage.removeItem('JWT');
-    this.authenticated$.next(false);
+  signIn(dto: SignIn): Observable<void> {
+    return this.http.post<void>(AuthenticationEndpoints.SIGN_IN, {
+      username: dto.username,
+      password: dto.password,
+    });
+  }
+
+  signOut(): Observable<void> {
+    return this.http.get<void>(AuthenticationEndpoints.SIGN_OUT);
   }
 }

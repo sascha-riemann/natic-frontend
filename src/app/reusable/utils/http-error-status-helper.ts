@@ -8,7 +8,6 @@ export interface NaticHttpErrorResponse {
 
 export class HttpErrorStatusHelper {
   public static UNAUTHORIZED(error: HttpErrorResponse): boolean {
-    console.log(error.status, HttpStatusCode.Unauthorized);
     return error.status === HttpStatusCode.BadRequest;
   }
 

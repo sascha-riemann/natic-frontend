@@ -1,0 +1,64 @@
+<app-page title="Personal" [showCreateButton]="true" (createClick)="openUserSelection()" size="full">
+  <ng-container *appLet="options$ | async as projectUsers">
+    <div class="flex flex-column">
+      <span>Rollen</span>
+      <p-multiSelect
+        styleClass="w-full max-w-20rem mb-4 mt-2"
+        *ngIf="roles$ | async as roles"
+        [options]="roles"
+        [formControl]="selectedRoles"
+        display="chip"
+        optionLabel="name"
+        optionValue="id"></p-multiSelect>
+    </div>
+
+    <span *ngIf="!projectUsers?.length">Keine Benutzer gefunden. Bitte überprüfen sie die Filter</span>
+
+    <p-table *ngIf="projectUsers?.length" [value]="projectUsers">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Vorname</th>
+          <th>Nachname</th>
+          <th>Benutzername</th>
+          <th>Rolle</th>
+          <th>E-Mail</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.username }}</td>
+          <td><p-tag [value]="user.role.name"></p-tag></td>
+          <td>{{ user.email }}</td>
+          <td>
+            <div class="flex flex-row gap-1">
+              <p-button
+                icon="pi pi-trash"
+                pTooltip="Aus Projekt entfernen"
+                styleClass="p-button-danger"
+                (onClick)="removeUser($event, user)"></p-button>
+              <p-confirmPopup></p-confirmPopup>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
+</app-page>
+
+<p-dialog header="Benutzer zu Projekt zuordnen" [(visible)]="visible" [style]="{ width: '100%', maxWidth: '30rem' }">
+  <div class="flex flex-column gap-4">
+    <p-listbox [options]="available" [(ngModel)]="selected" [multiple]="true" [metaKeySelection]="false">
+      <ng-template let-user pTemplate="item">
+        <div class="flex align-items-center gap-2">
+          <p-tag [value]="user.role.name"></p-tag>
+          <div>{{ user.firstName }} {{ user.lastName }}</div>
+        </div>
+      </ng-template>
+    </p-listbox>
+
+    <app-cancel-save (cancel)="cancel()" (save)="save()"></app-cancel-save>
+  </div>
+</p-dialog>

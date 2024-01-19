@@ -1,0 +1,88 @@
+<div class="flex flex-column mx-auto w-full" style="max-width: 1500px" *ngIf="timesheet$ | async as timesheet">
+  <h2>Stundenzettel</h2>
+  <div class="flex flex-column bg-white sticky top-0 z-1 gap-4 mb-4">
+    <app-timesheet-entry-form [formControl]="timesheetEntryForm" [workTimePerDay]="workTime$ | async"></app-timesheet-entry-form>
+
+    <div class="flex flex-row gap-2">
+      <p-calendar
+        [firstDayOfWeek]="1"
+        inputStyleClass="w-20rem"
+        styleClass="align-self-end w-full max-w-20rem"
+        dateFormat="dd.mm.yy"
+        [formControl]="dateRange"
+        selectionMode="range"></p-calendar>
+      <p-button styleClass="p-button-text" pTooltip="Woche zurück" icon="pi pi-chevron-left" (onClick)="lastWeek()"></p-button>
+      <p-button styleClass="p-button-text" (onClick)="dateRange.setValue(currentWeekRange)">Diese Woche</p-button>
+      <p-button styleClass="p-button-text" pTooltip="Woche vor" icon="pi pi-chevron-right" (onClick)="nextWeek()"></p-button>
+    </div>
+  </div>
+
+  <p-accordion [activeIndex]="0">
+    <p-accordionTab
+      *ngFor="let segment of timesheet.timesheetSegments"
+      [contentStyle]="{ padding: !!segment.entries.length ? 0 : undefined }">
+      <ng-template pTemplate="header">
+        <div class="flex flex-row align-items-center w-full h-1rem relative">
+          <span class="w-5rem">{{ segment.date | date : "dd.MM.yy" }}</span>
+          <p-divider layout="vertical"></p-divider>
+          <span *ngIf="segment.fullDayCategory as category">Ganzer Arbeitstag - {{ GET_CATEGORY_NAME(category) }}</span>
+          <div *ngIf="!segment.fullDayCategory" class="flex gap-4">
+            <span>Arbeit: {{ segment.workTime }}</span>
+            <span>Pause: {{ segment.breakTime }}</span>
+            <span *ngIf="timesheet.workTimePerDay">Differenz: {{ (timesheet.workTimePerDay - segment.workTime) * -1 }}</span>
+          </div>
+          <p-button
+            [disabled]="!!segment.fullDayCategory"
+            class="ml-auto"
+            styleClass="p-button-text"
+            tooltipPosition="left"
+            [pTooltip]="
+              segment.fullDayCategory
+                ? 'Tätigkeit über den ganzen Arbeitstag. Entfernen oder bearbeiten sie den Eintrag, um den Tag bearbeiten zu können'
+                : 'Eintrag hinzufügen'
+            "
+            icon="pi pi-plus"
+            (onClick)="$event.stopPropagation(); addEntry(segment.date, segment.entries)"></p-button>
+        </div>
+      </ng-template>
+      <span *ngIf="!segment.entries?.length">Keine Einträge für diesen Tag gefunden</span>
+      <p-table *ngIf="segment.entries?.length" [value]="segment.entries" class="mb-4">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Kategorie</th>
+            <th>Projekt</th>
+            <th>Start</th>
+            <th>Ende</th>
+            <th>Beschreibung</th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-entry>
+          <tr>
+            <td width="15%">{{ GET_CATEGORY_NAME(entry.category) }}</td>
+            <td width="15%">{{ entry.project.name }}</td>
+            <ng-container *ngIf="!entry.fullWorkDay">
+              <td width="15%">{{ entry.start | date : "HH:mm" }}</td>
+              <td width="15%">{{ entry.end | date : "HH:mm" }}</td>
+            </ng-container>
+            <ng-container *ngIf="entry.fullWorkDay">
+              <td width="30%">Ganzer Arbeitstag</td>
+            </ng-container>
+            <td width="40%">{{ entry.description || "-" }}</td>
+            <td>
+              <div class="flex flex-row">
+                <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-secondary" (onClick)="editEntry(entry)"></p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  styleClass="p-button-text p-button-danger"
+                  (onClick)="deleteEntry($event, entry.id)"></p-button>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-accordionTab>
+  </p-accordion>
+</div>
+
+<p-confirmPopup></p-confirmPopup>

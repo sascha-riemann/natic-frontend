@@ -1,0 +1,76 @@
+<div *appLet="fullDay$ | async as fullDay" class="flex flex-column gap-3 bg-gray-100 border-round p-3">
+  <div class="flex flex-row gap-2" [formGroup]="formGroup">
+    <div class="flex flex-column gap-2 flex-1">
+      <span>Tätigkeit</span>
+      <p-dropdown class="flex" styleClass="w-full" formControlName="category" [options]="Object.keys(TIMESHEET_CATEGORIES)">
+        <ng-template let-category pTemplate="selectedItem">
+          {{ GET_CATEGORY_TITLE(category) }}
+        </ng-template>
+        <ng-template let-category pTemplate="item">
+          {{ GET_CATEGORY_TITLE(category) }}
+        </ng-template>
+      </p-dropdown>
+    </div>
+
+    <ng-container *ngIf="formGroup.get('category')?.value">
+      <div class="flex flex-column gap-2 flex-1">
+        <span>Projekt</span>
+        <p-dropdown
+          styleClass="w-full"
+          *ngIf="projects$ | async as projects"
+          [options]="projects"
+          [autoDisplayFirst]="false"
+          [filter]="true"
+          optionValue="id"
+          formControlName="projectId"
+          optionLabel="name"
+          filterBy="name">
+        </p-dropdown>
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <span>&nbsp;</span>
+        <p-toggleButton
+          formControlName="fullWorkDay"
+          styleClass="w-full"
+          [pTooltip]="!workTimePerDay ? 'Um diese Funktion zu nutzen muss ihr Admin eine Arbeitszeit für sie hinterlegen' : undefined"
+          onLabel="Ganzer Arbeistag"
+          offLabel="Ganzer Arbeistag"></p-toggleButton>
+      </div>
+
+      <div class="flex flex-column gap-2 flex-1">
+        <span>Start</span>
+        <p-calendar
+          [firstDayOfWeek]="1"
+          styleClass="flex w-full"
+          dateFormat="dd.mm.yy"
+          hourFormat="HH:mm"
+          [showTime]="!fullDay"
+          formControlName="start"></p-calendar>
+      </div>
+
+      <div class="flex flex-column gap-2 flex-1">
+        <span>Ende</span>
+        <p-calendar
+          [firstDayOfWeek]="1"
+          styleClass="w-full"
+          dateFormat="dd.mm.yy"
+          hourFormat="HH:mm"
+          [showTime]="!fullDay"
+          formControlName="end"></p-calendar>
+      </div>
+
+      <div class="flex flex-column gap-2 flex-1">
+        <span>Beschreibung</span>
+        <input pInputText formControlName="description" />
+      </div>
+
+      <div class="flex flex-row gap-2 mt-auto">
+        <p-button styleClass="p-button-danger" icon="pi pi-times" (onClick)="cancel()"></p-button>
+        <p-button (onClick)="save()" icon="pi pi-save"></p-button>
+      </div>
+    </ng-container>
+  </div>
+
+  <span *ngIf="timeCalculation$ | async as timeCalculation" [innerHTML]="timeCalculation"></span>
+</div>

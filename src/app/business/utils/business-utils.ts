@@ -5,4 +5,7 @@ export class BusinessUtils {
   static SET_ID(id: number): void {
     localStorage.setItem('businessId', id.toString());
   }
+  static REMOVE(): void {
+    localStorage.removeItem('businessId');
+  }
 }

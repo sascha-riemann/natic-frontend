@@ -13,7 +13,7 @@ import { BusinessUtils } from '../../utils/business-utils';
   styleUrls: ['./business-select.component.scss'],
 })
 export class BusinessSelectComponent {
-  options$ = this.http.get<BusinessSelectDto[]>(BusinessEndpoints.GET);
+  options$ = this.http.get<BusinessSelectDto[]>(BusinessEndpoints.get);
 
   constructor(private readonly router: Router, private readonly http: HttpClient) {}
 

@@ -1,0 +1,38 @@
+<app-page title="Benutzer in ihrem Betrieb" (createClick)="openUser()" size="bigger">
+  <p-table *appLet="businessUsers$ | async as businessUsers" [value]="businessUsers">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Benutzername</th>
+        <th>E-Mail</th>
+        <th>Rolle</th>
+        <th>Tägliche Arbeitszeit (Stunden)</th>
+        <th>Aktionen</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-businessUser>
+      <tr>
+        <td>{{ businessUser.firstName }}</td>
+        <td>{{ businessUser.lastName }}</td>
+        <td>{{ businessUser.username }}</td>
+        <td>{{ businessUser.email }}</td>
+        <td>
+          <p-tag
+            *ngIf="businessUser.role"
+            class="cursor-pointer"
+            [routerLink]="'/roles/' + businessUser.role.id"
+            [value]="businessUser.role.name"></p-tag>
+          <p-tag *ngIf="!businessUser.role" value="Keine Rollen"></p-tag>
+        </td>
+        <td>{{ businessUser.workTimePerDay || "-" }}</td>
+        <td>
+          <div class="flex flex-row gap-1">
+            <p-button icon="pi pi-pencil" styleClass="p-button-secondary" (onClick)="openUser(businessUser)"></p-button>
+            <p-button icon="pi pi-trash" styleClass="p-button-danger" (onClick)="removeUserFromBusiness(businessUser)"></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</app-page>

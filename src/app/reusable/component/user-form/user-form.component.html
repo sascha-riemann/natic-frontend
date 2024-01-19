@@ -1,0 +1,28 @@
+<div *ngIf="formGroup" class="flex flex-column gap-2" [formGroup]="formGroup">
+  <label>Vorname</label>
+  <input pInputText [appInputError]="formGroup.get('firstName')!.invalid" formControlName="firstName" />
+
+  <label>Nachname</label>
+  <input pInputText [appInputError]="formGroup.get('lastName')!.invalid" formControlName="lastName" />
+
+  <label>Benutzername</label>
+  <input pInputText [appInputError]="formGroup.get('username')!.invalid" formControlName="username" />
+  <p-message *ngIf="formGroup.get('username')!.hasError('exists')" text="Dieser Benutzername existiert bereits"></p-message>
+
+  <label>E-Mail</label>
+  <input pInputText [appInputError]="formGroup.get('email')!.invalid" type="email" formControlName="email" />
+  <p-message *ngIf="formGroup.get('email')!.hasError('exists')" text="Diese E-Mail existiert bereits"></p-message>
+
+  <ng-container *ngIf="changeOwn">
+    <ng-container *ngIf="formGroup.get('password') as passwordForm">
+      <label>Passwort</label>
+      <input pInputText [appInputError]="passwordForm.invalid" type="password" formControlName="password" />
+    </ng-container>
+
+    <ng-container *ngIf="formGroup.get('passwordRepeat') as passwordRepeatForm">
+      <label>Passwort wiederholen</label>
+      <input pInputText [appInputError]="passwordRepeatForm.invalid" type="password" formControlName="passwordRepeat" />
+      <p-message *ngIf="passwordRepeatForm.hasError('notEqual')" text="Password nicht korrekt wiederholt"></p-message>
+    </ng-container>
+  </ng-container>
+</div>

@@ -1,34 +1,10 @@
 <div class="flex justify-content-center align-items-center h-full">
-  <div class="w-full flex flex-column gap-2 w-30rem" [formGroup]="formGroup">
+  <div class="w-full flex flex-column gap-2 w-30rem">
     <h2>Konto erstellen</h2>
-
-    <label>Vorname</label>
-    <input pInputText formControlName="firstName" />
-
-    <label>Nachname</label>
-    <input pInputText formControlName="lastName" />
-
-    <label>Benutzername</label>
-    <input pInputText formControlName="username" />
-
-    <label>E-Mail</label>
-    <input pInputText type="email" formControlName="email" />
-
-    <label>Telefon</label>
-    <input pInputText formControlName="phone" />
-
-    <label>Passwort</label>
-    <input pInputText type="password" formControlName="password" />
-
-    <label>Passwort wiederholen</label>
-    <input pInputText type="password" formControlName="passwordRepeat" />
-
-    <!--    <label>Geburtsdatum</label>-->
-    <!--    <p-calendar formControlName="passwordRepeat"></p-calendar>-->
-
+    <app-user-form [formControl]="user" [changeOwn]="true" (cancel)="onCancel()"></app-user-form>
     <div class="flex flex-row gap-3 mt-5 align-self-end">
       <button pButton class="p-button-link" routerLink="../sign-in">Ich habe bereits ein Konto</button>
-      <button pButton (click)="signUp()" type="submit">Konto erstellen</button>
+      <button pButton (click)="save()" type="submit">Konto erstellen</button>
     </div>
   </div>
 </div>

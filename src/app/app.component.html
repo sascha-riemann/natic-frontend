@@ -1,17 +1,19 @@
-<p-menubar [model]="items">
-  <ng-template pTemplate="start">
-    <h3 class="m-3 mr-5 cursor-pointer" routerLink="/">NATIC</h3>
-  </ng-template>
-  <ng-template pTemplate="end">
-    <div class="flex flex-row gap-2">
-      <input type="text" pInputText placeholder="Search" />
-      <p-avatar label="S" size="large"></p-avatar>
-    </div>
-  </ng-template>
-</p-menubar>
+<div class="flex flex-column overflow-hidden" style="height: 100vh">
+  <p-menubar *ngIf="showNavBar$ | async" [model]="items">
+    <ng-template pTemplate="start">
+      <h3 class="m-3 mr-5 cursor-pointer" style="color: #0589ce" routerLink="/">NATIC</h3>
+    </ng-template>
+    <ng-template pTemplate="end">
+      <div class="flex flex-row gap-2">
+        <!--      <input type="text" pInputText placeholder="Search" />-->
+        <p-avatar class="cursor-pointer" label="S" size="large" (click)="menu.toggle($event)"></p-avatar>
+      </div>
+    </ng-template>
+  </p-menubar>
 
-<div class="py-2">
-  <router-outlet></router-outlet>
+  <div class="h-100 py-3 overflow-auto px-3">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
-<p-tieredMenu #menu [model]="userMenuItems" [popup]="true"></p-tieredMenu>
+<p-menu #menu [model]="userMenuItems" [popup]="true"></p-menu>

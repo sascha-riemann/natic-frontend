@@ -1,36 +1,51 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterModule, Routes } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
+import { ChipsModule } from 'primeng/chips';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ListboxModule } from 'primeng/listbox';
 import { MenuModule } from 'primeng/menu';
+import { MessageModule } from 'primeng/message';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import { TabViewModule } from 'primeng/tabview';
+import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TreeTableModule } from 'primeng/treetable';
 
+import { CancelSaveComponent } from '../reusable/component/cancel-save/cancel-save.component';
+import { PageComponent } from '../reusable/page/page/page.component';
 import { ReusableModule } from '../reusable/reusable.module';
 import { ProjectComponent } from './page/project/project.component';
-import { ProjectCreateComponent } from './page/project-create/project-create.component';
+import { ProjectCreatePageComponent } from './page/project-create/project-create.page.component';
 import { ProjectOverviewComponent } from './page/project-overview/project-overview.component';
 import { ProjectScheduleComponent } from './page/project-schedule/project-schedule.component';
 import { ProjectSettingsComponent } from './page/project-settings/project-settings.component';
+import { ProjectTaskCreateComponent } from './page/project-task/project-task-create/project-task-create.component';
+import { ProjectTaskUpdateComponent } from './page/project-task/project-task-update/project-task-update.component';
 import { ProjectTasksComponent } from './page/project-tasks/project-tasks.component';
+import { ProjectUsersComponent } from './page/project-users/project-users.component';
 import { ProjectsComponent } from './page/projects/projects.component';
 import { ProjectOverviewResolver } from './resolver/project-overview.resolver';
-import {MessageModule} from "primeng/message";
 
 export class ProjectEndpoints {
   static LIST = 'project/list';
   static CREATE = 'project';
+  static getUsers = (projectId: number) => `project/${projectId}/users`;
+  static setUsers = (projectId: number) => `project/${projectId}/users`;
   static UPDATE = (projectId: number) => `project/${projectId}`;
   static OVERVIEW = (projectId: number) => `project/${projectId}/overview`;
   static SCHEDULE = (projectId: number) => `project/${projectId}/schedule`;
@@ -40,7 +55,7 @@ export class ProjectEndpoints {
 const ROUTES: Routes = [
   {
     path: '',
-    pathMatch: 'full',
+    pathMatch: 'prefix',
     redirectTo: 'overview',
   },
   {
@@ -49,7 +64,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'create',
-    component: ProjectCreateComponent,
+    component: ProjectCreatePageComponent,
   },
   {
     path: ':id',
@@ -80,10 +95,10 @@ const ROUTES: Routes = [
         path: 'settings',
         component: ProjectSettingsComponent,
       },
-      // {
-      //   path: 'staff',
-      //   component: ConstructionSiteStaffComponent,
-      // },
+      {
+        path: 'users',
+        component: ProjectUsersComponent,
+      },
     ],
   },
 ];
@@ -92,11 +107,14 @@ const ROUTES: Routes = [
   declarations: [
     ProjectsComponent,
     ProjectComponent,
-    ProjectCreateComponent,
+    ProjectCreatePageComponent,
     ProjectOverviewComponent,
     ProjectTasksComponent,
     ProjectScheduleComponent,
     ProjectSettingsComponent,
+    ProjectUsersComponent,
+    ProjectTaskCreateComponent,
+    ProjectTaskUpdateComponent,
   ],
   imports: [
     CommonModule,
@@ -108,7 +126,6 @@ const ROUTES: Routes = [
     MenuModule,
     CardModule,
     ListboxModule,
-    ReusableModule,
     SkeletonModule,
     DialogModule,
     ToastModule,
@@ -117,6 +134,18 @@ const ROUTES: Routes = [
     TreeTableModule,
     GoogleMapsModule,
     MessageModule,
+    ReusableModule,
+    TableModule,
+    ConfirmDialogModule,
+    PageComponent,
+    TabViewModule,
+    FormsModule,
+    TagModule,
+    CancelSaveComponent,
+    SelectButtonModule,
+    ChipsModule,
+    MultiSelectModule,
+    ConfirmPopupModule,
   ],
   providers: [MessageService],
 })

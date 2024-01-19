@@ -1,0 +1,177 @@
+<app-page *ngIf="viewModel$ | async as viewModel" size="full">
+  <div class="flex flex-row w-full mb-5">
+    <div class="flex flex-row flex-grow-1 flex-1 align-items-center gap-4">
+      <h1 class="m-0">Betriebs-Planung</h1>
+      <!--      <p-button styleClass="p-button-text" (onClick)="selectCurrentWeek()">Diese Woche</p-button>-->
+    </div>
+    <div class="flex flex-row gap-4 justify-content-center flex-1">
+      <p-button icon="pi pi-arrow-left" styleClass="p-button-rounded" hidden></p-button>
+      <p-button icon="pi pi-arrow-left" styleClass="p-button-rounded" (onClick)="previousDay()"></p-button>
+      <h3 class="my-auto">{{ viewModel.dateRange.start | date : "dd.MM.yyyy" }} - {{ viewModel.dateRange.end | date : "dd.MM.yyyy" }}</h3>
+      <div class="flex flex-row gap-2">
+        <p-button icon="pi pi-arrow-right" styleClass="p-button-rounded" (onClick)="nextDay()"></p-button>
+      </div>
+    </div>
+    <div class="flex-1 flex flex-row gap-3 justify-content-end" [formGroup]="weekendVisibilityFormGroup">
+      <p-checkbox label="Samstag" [binary]="true" formControlName="saturday"></p-checkbox>
+      <p-checkbox label="Sonntag" [binary]="true" formControlName="sunday"></p-checkbox>
+    </div>
+  </div>
+
+  <div class="flex flex-row gap-3">
+    <div class="flex flex-column gap-1 flex-1">
+      <h3>&nbsp;</h3>
+      <p-accordion [multiple]="true">
+        <p-accordionTab
+          header="Projekte für diesen Zeitraum"
+          [selected]="viewModel.expansionStates['projects']"
+          (selectedChange)="changePlanningExpansionStatus('projects', !viewModel.expansionStates['projects'])">
+          <p-listbox
+            class="availableRessource"
+            emptyMessage="Keine Projekte für Planung hinzugefügt"
+            [listStyle]="{ maxHeight: '20rem' }"
+            [filter]="true"
+            [multiple]="true"
+            [metaKeySelection]="false"
+            optionLabel="name"
+            [options]="viewModel.projectOptions"
+            [(ngModel)]="selectedProjects">
+          </p-listbox>
+          <p-button styleClass="p-button-text" (onClick)="editPlanningProjectSelection(viewModel.projectOptions)"
+            >Auswahl bearbeiten</p-button
+          >
+        </p-accordionTab>
+        <p-accordionTab
+          header="Mitarbeiter"
+          [selected]="viewModel.expansionStates['staff']"
+          (selectedChange)="changePlanningExpansionStatus('staff', !viewModel.expansionStates['staff'])">
+          <p-listbox
+            [multiple]="true"
+            [filter]="true"
+            [metaKeySelection]="false"
+            [listStyle]="{ maxHeight: '20rem' }"
+            class="mt-2 availableRessource"
+            [options]="viewModel.userOptions"
+            [(ngModel)]="selectedUsers">
+            <ng-template let-staff pTemplate="item"> {{ staff.firstName }} {{ staff.lastName }} </ng-template>
+          </p-listbox>
+        </p-accordionTab>
+        <p-accordionTab
+          *ngFor="let resourceCategory of viewModel.resources"
+          [header]="resourceCategory.category.name"
+          [selected]="viewModel.expansionStates['resourceCategory' + resourceCategory.category.id]"
+          (selectedChange)="
+            changePlanningExpansionStatus(
+              'resourceCategory' + resourceCategory.category.id,
+              !viewModel.expansionStates['resourceCategory' + resourceCategory.category.id]
+            )
+          ">
+          <p-listbox
+            [multiple]="true"
+            [filter]="true"
+            [listStyle]="{ maxHeight: '20rem' }"
+            [metaKeySelection]="false"
+            optionLabel="name"
+            class="mt-2 availableRessource"
+            [options]="resourceCategory.resources"
+            [(ngModel)]="selectedResources[resourceCategory.category.id]">
+            <ng-template let-resource pTemplate="item">
+              <div class="flex flex-column">
+                <span>{{ resource.name }}</span>
+                <span>{{ resource.identification }}</span>
+              </div>
+            </ng-template>
+          </p-listbox>
+        </p-accordionTab>
+      </p-accordion>
+    </div>
+
+    <div *ngFor="let plannedDay of viewModel.plannedDays" class="flex flex-column gap-1 flex-1">
+      <h3>{{ plannedDay.date | date : "EEEEEE dd.MM.yy" : undefined : "de-DE" }}</h3>
+
+      <span *ngIf="!plannedDay.plannings?.length && !getPlanningProjectsToAdd(plannedDay.plannings)?.length">Keine Projekte verplant</span>
+
+      <div class="flex flex-column gap-2 w-full">
+        <p-accordion [multiple]="true">
+          <p-accordionTab
+            *ngFor="let planning of plannedDay.plannings"
+            (selectedChange)="changePlanningExpansionStatus(planning.id, !viewModel.expansionStates[planning.id])"
+            [selected]="viewModel.expansionStates[planning.id] || false">
+            <ng-template pTemplate="header">
+              <div class="flex flex-row align-items-center w-full h-1rem relative">
+                <span>{{ planning.project.name }}</span>
+                <p-button
+                  class="ml-auto"
+                  styleClass="p-button-text"
+                  pTooltip="Projekt entplanen"
+                  icon="pi pi-trash"
+                  (onClick)="$event.stopPropagation(); removePlanning(planning.id)"></p-button>
+              </div>
+            </ng-template>
+
+            <div class="flex flex-column gap-1 w-full" *appLet="planning.project as project">
+              <div class="flex flex-column">
+                <div class="flex flex-column gap-2">
+                  <strong>Mitarbeiter</strong>
+                  <span *ngIf="!planning.users?.length">Keine Zuordnungen</span>
+                  <div *ngFor="let user of planning.users.concat(selectedUsers)" class="flex flex-row align-items-center">
+                    <span>{{ user.firstName }} {{ user.lastName }}</span>
+                    <p-button
+                      *ngIf="planning.users.includes(user)"
+                      class="ml-auto"
+                      icon="pi pi-trash"
+                      styleClass="p-button-rounded p-button-text p-button-danger"
+                      (onClick)="removePlanningUsers(planning.id, user.id)"></p-button>
+                    <p-button
+                      *ngIf="!planning.users.includes(user)"
+                      class="ml-auto"
+                      icon="pi pi-plus"
+                      styleClass="p-button-rounded p-button-text"
+                      (onClick)="addPlanningUser(plannedDay.date, project.id, user.id)"></p-button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-column mt-4" *ngFor="let resourceGroup of planning.resources">
+                <div class="flex flex-column gap-2">
+                  <strong>{{ resourceGroup.category.name }}</strong>
+                  <span *ngIf="!resourceGroup.resources?.length">Keine Zuordnungen</span>
+                  <div
+                    class="flex flex-row"
+                    *ngFor="let resource of [resourceGroup.resources, selectedResources[resourceGroup.category.id]] | concatArrays">
+                    <div class="flex flex-column">
+                      <span>{{ resource.name }}</span>
+                      <span>{{ resource.identification }}</span>
+                    </div>
+                    <p-button
+                      *ngIf="resourceGroup.resources.includes(resource)"
+                      class="ml-auto"
+                      icon="pi pi-trash"
+                      styleClass="p-button-rounded p-button-danger p-button-text"
+                      (onClick)="removePlanningResource(planning.id, resource.category.id, resource.id)"></p-button>
+
+                    <p-button
+                      *ngIf="!resourceGroup.resources.includes(resource)"
+                      class="ml-auto"
+                      icon="pi pi-plus"
+                      styleClass="p-button-rounded p-button-text"
+                      (onClick)="addPlanningResource(plannedDay.date, project.id, resource.id, resource.category.id)"></p-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+        <ng-container *appLet="getPlanningProjectsToAdd(plannedDay.plannings) as projects">
+          <p-button
+            styleClass="p-button-text"
+            *ngFor="let project of projects"
+            [style]="{ width: '100%' }"
+            (onClick)="addPlanning(plannedDay.date, project.id)"
+            >+ {{ project.name }}</p-button
+          >
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</app-page>

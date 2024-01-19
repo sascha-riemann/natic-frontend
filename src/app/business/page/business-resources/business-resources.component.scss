@@ -1,0 +1,9 @@
+h2 {
+  width: 10rem;
+}
+
+p-table ::ng-deep {
+  .p-datatable-wrapper {
+    overflow: initial;
+  }
+}

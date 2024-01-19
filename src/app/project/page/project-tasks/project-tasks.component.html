@@ -1,36 +1,7 @@
-<div class="flex flex-row gap-2 w-full">
-  <div class="flex flex-column gap-2">
-    <h3>Aktuelle Aufgaben</h3>
+<app-page size="full" title="Aufgaben" createRouterLink="create" [showCreateButton]="true">
+  <div class="flex flex-row">
+    <div class="flex flex-column w-6">
+      <span>Aufgaben</span>
+    </div>
   </div>
-  <div class="flex flex-column gap-2">
-    <h3>Aufgabe erstellen</h3>
-    <div class="flex flex-column gap-1">
-      <label>Titel</label>
-      <input pInputText />
-    </div>
-
-    <div class="flex flex-column gap-1">
-      <label>Beschreibung</label>
-      <textarea pInputTextarea [autoResize]="true"></textarea>
-    </div>
-
-    <div class="flex flex-column gap-1">
-      <label>Zu erledigen bis</label>
-      <p-calendar [style]="{ width: '100%' }"></p-calendar>
-    </div>
-
-    <p-fileUpload
-      name="demo[]"
-      url="https://www.primefaces.org/cdn/api/upload.php"
-      (onUpload)="onUpload($event)"
-      [multiple]="true"
-      accept="image/*"
-      [maxFileSize]="1000000">
-      <ng-template pTemplate="content">
-        <ul *ngIf="uploadedFiles.length">
-          <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
-        </ul>
-      </ng-template>
-    </p-fileUpload>
-  </div>
-</div>
+</app-page>

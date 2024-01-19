@@ -21,7 +21,7 @@ export class ProjectComponent {
     {
       label: 'Personal',
       icon: 'pi pi-users',
-      disabled: true,
+      routerLink: './users',
     },
     {
       label: 'Zeitplan',
@@ -48,7 +48,6 @@ export class ProjectComponent {
       label: 'Aufgaben',
       routerLink: './tasks',
       icon: 'pi pi-check-circle',
-      disabled: true,
     },
     {
       label: 'Einstellungen',
@@ -63,7 +62,6 @@ export class ProjectComponent {
     controlSize: 25,
     mapTypeControl: false,
     keyboardShortcuts: false,
-
   } as google.maps.MapOptions;
 
   constructor(private readonly route: ActivatedRoute) {}

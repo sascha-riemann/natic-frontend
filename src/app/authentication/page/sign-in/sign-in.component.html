@@ -1,16 +1,20 @@
-<div class="flex justify-content-center align-items-center h-full">
+<div class="flex justify-content-center align-items-center h-full" *appLet="formGroup.hasError('unauthorized') as error">
   <div class="w-full flex flex-column gap-2 w-30rem" [formGroup]="formGroup">
-    <h2>Einloggen</h2>
+    <h2>Einloggen {{ error }}</h2>
 
     <label>Benutzername oder E-Mail</label>
-    <input pInputText formControlName="login" />
+    <input pInputText [appInputError]="error" formControlName="username" />
 
     <label>Passwort</label>
-    <input pInputText type="password" formControlName="password" />
+    <input pInputText [appInputError]="error" type="password" formControlName="password" />
+
+    <app-input-error-hint
+      *ngIf="error"
+      errorMessage="Login fehlgeschlagen. Bitte überprüfen Sie Ihre Login und Passwort"></app-input-error-hint>
 
     <div class="flex flex-row gap-3 mt-5 align-self-end">
       <button pButton class="p-button-link" routerLink="../sign-up"> Konto erstellen </button>
-      <button pButton (click)="signIn()" type="submit"> Einloggen </button>
+      <button pButton (click)="signIn()"> Einloggen </button>
     </div>
   </div>
 </div>

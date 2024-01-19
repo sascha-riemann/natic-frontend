@@ -1,0 +1,18 @@
+<div class="flex flex-column gap-2" [formGroup]="resourceFormGroup">
+  <p-dropdown
+    *ngIf="resourceCategories$ | async as resourceCategories"
+    scrollHeight="150px"
+    styleClass="w-full"
+    [autoDisplayFirst]="false"
+    placeholder="Kategorie auswählen"
+    formControlName="categoryId"
+    [options]="resourceCategories"
+    optionLabel="name"
+    optionValue="id"></p-dropdown>
+  <input pInputText class="w-full" formControlName="name" placeholder="Name" />
+  <input pInputText class="w-full" formControlName="identification" placeholder="Kennzeichnung" />
+  <div class="flex flex-row gap-1 align-self-end">
+    <p-button label="Abbrechen" styleClass="p-button-danger" (onClick)="cancel()"></p-button>
+    <p-button label="Speichern" pTooltip="Ressource erstellen" (onClick)="create()"></p-button>
+  </div>
+</div>

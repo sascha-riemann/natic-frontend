@@ -1,0 +1,9 @@
+<div class="flex justify-content-center align-items-center h-full">
+  <div class="w-full flex flex-column gap-2 w-30rem">
+    <h2>Möchtest du dich wirklich abmelden?</h2>
+    <div class="flex flex-row gap-3 mt-3">
+      <button pButton class="p-button-link" (click)="cancel()" routerLink="../sign-up">Nein</button>
+      <button pButton (click)="logout()" type="submit">Ja</button>
+    </div>
+  </div>
+</div>

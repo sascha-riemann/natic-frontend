@@ -1,0 +1,18 @@
+<div class="flex flex-column gap-2" [formGroup]="formGroup">
+  <label>Vorname</label>
+  <input pInputText class="w-full" formControlName="firstName" />
+  <label>Nachname</label>
+  <input pInputText class="w-full" formControlName="lastName" />
+  <label>Benutzername</label>
+  <input pInputText class="w-full" formControlName="username" />
+  <p-message *ngIf="formGroup.get('username')!.hasError('exists')" text="Dieser Benutzername existiert bereits"></p-message>
+  <label>E-Mail</label>
+  <input pInputText class="w-full" formControlName="email" />
+  <p-message *ngIf="formGroup.get('email')!.hasError('exists')" text="Diese E-Mail existiert bereits"></p-message>
+  <label>Tägliche Arbeitszeit (Stunden)</label>
+  <input pInputText class="w-full" formControlName="workTimePerDay" />
+  <div class="flex flex-row gap-1 align-self-end">
+    <p-button label="Abbrechen" styleClass="p-button-danger" (onClick)="cancel()"></p-button>
+    <p-button label="Speichern" pTooltip="Ressource erstellen" (onClick)="save()"></p-button>
+  </div>
+</div>

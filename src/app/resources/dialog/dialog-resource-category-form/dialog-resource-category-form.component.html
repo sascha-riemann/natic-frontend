@@ -1,0 +1,8 @@
+<div class="flex flex-column gap-2">
+  <input pInputText class="w-full" [formControl]="resourceName" placeholder="Name" />
+  <p-button *ngIf="resourceCategory" styleClass="p-button-danger" label="Ressource löschen" (onClick)="delete()"></p-button>
+  <div class="flex flex-row gap-1 align-self-end">
+    <p-button styleClass="p-button-text" label="Abbrechen" (onClick)="cancel()"></p-button>
+    <p-button pTooltip="Benutzer erstellen" label="Speichern" (onClick)="create()"></p-button>
+  </div>
+</div>

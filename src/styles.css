@@ -5,8 +5,14 @@
 
 body {
   font-family: var(--font-family);
+  margin: 0;
 }
 
 h1, h2, h3 {
   font-weight: 400;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 60rem;
 }
